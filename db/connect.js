@@ -1,34 +1,13 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require('mongoose');
 
-let db;
-let client;
-
-const connectDB = async (uri) => {
+const connectDB = async () => {
   try {
-    client = new MongoClient(uri);
-    await client.connect();
-
-    db = client.db("cantactsDB");
-
-    console.log("Connected to MongoDB");
-  } catch (error) {
-    console.error("MongoDB connection failed:", error.message);
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("MongoDB Connected");
+  } catch (err) {
+    console.error(err);
     process.exit(1);
   }
 };
 
-const getDB = () => {
-  if (!db) {
-    throw new Error("Database not initialized");
-  }
-  return db;
-};
-
-const closeDB = async () => {
-  if (client) {
-    await client.close();
-    console.log("MongoDB connection closed");
-  }
-};
-
-module.exports = { connectDB, getDB, closeDB };
+module.exports = connectDB;
