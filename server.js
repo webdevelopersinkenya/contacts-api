@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 const connectDB = require('./db/connect');
 
+//  FIRST
+app.use(cors());
 app.use(express.json());
 
 // Routes
@@ -16,11 +19,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 8080;
 
-//  ADD LOCALHOST URL DISPLAY
 app.listen(PORT, () => {
-  console.log(`Server running at: http://localhost:${PORT}`);
-  console.log(`Swagger UI: http://localhost:${PORT}/api-docs`);
+  console.log(`Server running at http://localhost:${PORT}`);
+   console.log(`Swagger UI: http://localhost:${PORT}/api-docs`);
 });
 
-// connect DB after server starts
 connectDB();

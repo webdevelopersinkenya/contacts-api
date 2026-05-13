@@ -39,7 +39,7 @@ const createContact = async (req, res) => {
       birthday
     });
 
-    res.status(201).json({ id: newContact._id });
+   res.status(201).json(newContact);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
