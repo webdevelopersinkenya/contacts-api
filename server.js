@@ -3,10 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const userRoutes = require("./routes/users");
+const errorHandler = require("./middleware/errorHandler");
 
 app.use(cors());
 app.use(express.json());
 app.use("/users", userRoutes);
+app.use(errorHandler);
 
 
 // Swagger FIRST

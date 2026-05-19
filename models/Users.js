@@ -3,15 +3,30 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "aura"],
+    required: [true, "Name is required"],
     trim: true,
     minlength: 2
   },
+
   age: {
     type: Number,
-    min: 0,
-    required: true
+    required: [true, "Age is required"],
+    min: 0
+  },
+
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+    minlength: 6
   }
 });
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("User", userSchema);
