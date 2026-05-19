@@ -7,7 +7,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 app.use(cors());
 app.use(express.json());
-app.use("/users", userRoutes);
+app.use("/Users", userRoutes);
 app.use(errorHandler);
 
 
