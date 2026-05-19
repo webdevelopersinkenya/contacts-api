@@ -3,9 +3,41 @@ const router = express.Router();
 const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
+
+router.post("/register", async (req, res, next) => {
+  try {
+    const { name, age, email, password } = req.body;
+
+    // check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name,
+      age,
+      email,
+      password: hashedPassword
+    });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user
+    });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 // GET all users
-router.get("/", async (req, res, next) => {
+router.get("/", auth, async (req, res, next) => {
   try {
     const user = await User.find();
     res.json(user);
@@ -89,35 +121,7 @@ router.put("/:id", async (req, res, next) => {
     next(err);
   }
 });
-router.post("/register", async (req, res, next) => {
-  try {
-    const { name, age, email, password } = req.body;
 
-    // check if user exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    // hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      name,
-      age,
-      email,
-      password: hashedPassword
-    });
-
-    res.status(201).json({
-      message: "User registered successfully",
-      user
-    });
-
-  } catch (err) {
-    next(err);
-  }
-});
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -135,10 +139,10 @@ router.post("/login", async (req, res, next) => {
 
     // create token
     const token = jwt.sign(
-      { id: user._id, email: user.email },
-      "secretKey123", // later move to .env
-      { expiresIn: "1h" }
-    );
+  { id: user._id, email: user.email },
+  process.env.JWT_SECRET,
+  { expiresIn: "1h" }
+);
 
     res.json({
       message: "Login successful",
