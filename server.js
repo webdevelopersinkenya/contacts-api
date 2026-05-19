@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const userRoutes = require("./routes/users");
+const userRoutes = require("./routes/Users");
 const errorHandler = require("./middleware/errorHandler");
 
 app.use(cors());
